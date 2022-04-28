@@ -787,9 +787,7 @@ function generateZombie(id, name, dna) {
 
 https://share.cryptozombies.io/zh/lesson/1/share/GG?id=Y3p8MjEwMTY2
 
-点击以下按钮后分享:
-
-[![Twitter](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAP1BMVEVMaXEtquEtquEtquEtquEtquEtquEtquEtquEtquH///8tquEjp+B6yu1cvui54/ZJtubu+f2b1/HZ8Po5r+NIpyL0AAAACnRSTlMAri5RyBgL5nKQDNswyAAAAixJREFUeNqll+16rCAMhAVRwIRv7v9aT3dP+6QGFtS+v3dmhwRjXD6xSWOF0l8oYc26LbeQRmg4oZWRV9W7UdBFme2SXMNH9NyCy1uLfSTfBExRgxCrhgvo9WN8uIjp6y1cRvQKIeAGan/2/4R4eH7CsvrDbdZT/zXcRsunBaRC3igAIg7KsOuZGmKM8O1BTnrrBMCOPuaSjlRyxFcSH5EitAFcRa536fhPclh9KJVHWH//2REAmf4gypeXQ/5QqNOvmQPGby2l8L8ivBohgcB8MAcMZ4PgSmC3yXCDo3hECsApFc+dFMzgRY6IVIFGTyh2i9H/HPVlga1BU2O5SDhRfp3WV2wMHPJHyjRNI1LIYWJg2SCpmJliYiDODyLm4MLQwDMDtShgXRgTmYFeNLAuDCkAQwPAMjYIODSYR3ATA95HToqtgQJgGcr4BNxAAKPGnOZNpDZaniCnNA1AiGYiYxzeIo6lgTYvY8be+2nTVx0KdAwkjUQCfUjHcBKdhqKBBsTq0uQK0EiTHT36MtITKx/rb6oLTf6+Xu/szeadd7lTgFwReli+HMTQvT805hmSv1wRYy7s8CRvEJ39BBF8DiW9tSVkX7m8DUARaJmo/ov4LuqVPWtXbSeHWnq50yHuI/+45pk/L5oM8XDH6xby2VfHLu7qny/sdn/8ycPrz5Hq3pLdsls9i78tY7ahhZXLnM18sNAkn7CvVrXqdV/uIFcrlH6jhF3lJ/U/pHGLPOYIuhYAAAAASUVORK5CYII=)](https://twitter.com/share?text=我刚完成了%23CryptoZombies 的第一课！学会了如何在%23Ethereum 上搭建游戏。看我的部队里的第一个僵尸!&url=https%3A%2F%2Fshare.cryptozombies.io%2Fzh%2Flesson%2F1%2Fshare%2FGG%3Fid%3DY3p8MjEwMTY2) [![Facebook](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAP1BMVEUAAAA8W5s8W5s8W5s8W5s8W5s8W5s8W5s8W5s8W5v///8zVJdDYZ/2+Pvp7PRYc6pIZqKFmcGpt9Ti5/HP1+dNCs8sAAAACnRSTlMAKEf/x2qq5RGK98Na8wAAAcFJREFUeNqll9GSgyAMRYEEAioqtf//rYuzdJm6xiic6es9wlUKKA5vbHBIGXTBGq8eoa0j+ILQ6rtpbxFOQetvxQlYKIiKEmche/14ByJ40YUhuAEZdvhwk3CeD3Abd9algwegF54v4h7Nf8w/oQfDZsdp/QUOmK/3T0x8Te9tjjvb0UBaLnBM8/AhrhdFWia/xOGPeYUjQZoAvIdLAXlhAGm4FkAQGnzlHNNBQZcBCDOIr0ya2EWBTH7aiiCNO5A5bUGDIIhrDZ99TVYSzNP1wkZRsAILsu9gzHwEwHWQ0cwymlIuPtaXkDmfiGUqmEq4snElBG7+B94j88fibgpeI9Mi9glI0blgPgrSQ8EWY+wRwJIpo4hpyazwTLB/OXUtZIAR1BLZHuKyp1mB6xOgCn0Cp2yfICjTJ7DKU5dAK4U9Air7erPAZYHuERiVwTZB3dxsuyCUra1ZoMvxqFXg6vbeJtCqYCWBeN7EFgH5KtDECjKMQIvHvFRg9iT5oDoW7h1VHTwC1RGPnYdt5V1DvvHA7nzbjav2z6Kx7cpU8UEahHhz1JcKp/mkrKBQ4iLeBPyffniD1+X2X+7/7LN/AECLPD/4xJvtAAAAAElFTkSuQmCC)](http://www.facebook.com/sharer.php?u=https%3A%2F%2Fshare.cryptozombies.io%2Fzh%2Flesson%2F1%2Fshare%2FGG%3Fid%3DY3p8MjEwMTY2) [加入我们的Telegram](https://t.me/loomnetworkdev)
+[加入我们的Telegram](https://t.me/loomnetworkdev)
 
 
 
@@ -813,7 +811,7 @@ https://share.cryptozombies.io/zh/lesson/1/share/GG?id=Y3p8MjEwMTY2
 
 学完这一章，请点击“下一章”， 我们该让游戏支持多玩家模式了。
 
-<img src="/Users/jacky/Library/Application Support/typora-user-images/image-20220428150136864.png" align="center" style="width:500px" />
+<img src="https://markdown-res.oss-cn-hangzhou.aliyuncs.com/mdImgs/2022/04/28/20220428161055.png" align="center" style="width:500px" />
 
 <img src="https://markdown-res.oss-cn-hangzhou.aliyuncs.com/mdImgs/2022/04/28/20220428150659.png" align="center" style="width:500px" />
 
