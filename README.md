@@ -1,6 +1,8 @@
 # 学习 Solidity 完成一个 CryptoZombie 游戏项目
 
-本教程只是把https://cryptozombies.io/zh网站中的教程摘录下来，用于学习回顾，具体实操请在网站上学习实践，酌情参考。
+本教程只是把 https://cryptozombies.io/zh 网站中的教程摘录下来，用于学习回顾，具体实操请在网站上学习实践，酌情参考。
+
+
 
 ## 1. 开始一个中级的智能合约
 
