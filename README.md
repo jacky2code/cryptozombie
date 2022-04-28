@@ -97,3 +97,89 @@ contract ZombieFactory {
 }
 ```
 
+
+
+#### 第3章 状态变量和整数
+
+真棒！我们已经为我们的合约做了一个外壳， 下面学习 Solidity 中如何使用变量。
+
+##### 状态变量
+
+***状态变量*** 是被永久地保存在合约中。也就是说它们被写入以太币区块链中. 想象成写入一个数据库。
+
+例子：
+
+``` solidity
+contract Example {
+  // 这个无符号整数将会永久的被保存在区块链中
+  uint myUnsignedInteger = 100;
+}
+```
+
+在上面的例子中，定义 `myUnsignedInteger` 为 `uint` 类型，并赋值100。
+
+##### 无符号整数 uint
+
+`uint` 无符号数据类型， 指**其值不能是负数**，对于有符号的整数存在名为 `int` 的数据类型。
+
+*注: Solidity中，* `uint` *实际上是* `uint256`*代名词， 一个256位的无符号整数。你也可以定义位数少的uints —* `uint8`*，* `uint16`*，* `uint32`*， 等…… 但一般来讲你愿意使用简单的* `uint`*， 除非在某些特殊情况下，这我们后面会讲。*
+
+##### 实战演习
+
+我们的僵尸DNA将由一个十六位数字组成。
+
+定义 `dnaDigits` 为 `uint` 数据类型, 并赋值 `16`。
+
+``` solidity
+pragma solidity ^0.4.19;
+
+contract ZombieFactory {
+    uint dnaDigits = 16;
+}
+```
+
+
+
+#### 第4章 数学运算
+
+在 Solidity 中，数学运算很直观明了，与其它程序设计语言相同:
+
+- 加法: `x + y`
+- 减法: `x - y`,
+- 乘法: `x * y`
+- 除法: `x / y`
+- 取模 / 求余: `x % y` *(例如, `13 % 5` 余 `3`, 因为13除以5，余3)*
+
+Solidity 还支持 ***乘方操作\*** (如：x 的 y次方） // 例如： 5 ** 2 = 25
+
+```solidity
+uint x = 5 ** 2; // equal to 5^2 = 25
+```
+
+##### 实战演习
+
+为了保证我们的僵尸的DNA只含有16个字符，我们先造一个`uint`数据，让它等于10^16。这样一来以后我们可以用模运算符 `%` 把一个整数变成16位。
+
+1. 建立一个`uint`类型的变量，名字叫`dnaModulus`, 令其等于 **10 的 `dnaDigits` 次方**.
+
+``` solidity
+pragma solidity ^0.4.19;
+
+contract ZombieFactory {
+    uint dnaDigits = 16;
+    uint dnaModulus = 10 ** dnaDigits;
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
