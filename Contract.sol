@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >= 0.4.19;
+pragma solidity >=0.4.19;
 
 contract ZombieFactory {
-
     uint dnaDigits = 16;
     uint dnaModulus = 10 ** dnaDigits;
 
@@ -13,7 +12,11 @@ contract ZombieFactory {
 
     Zombie[] public zombies;
 
-    function createZombie(string calldata _name, uint _dna) public {
+    function _createZombie(string calldata _name, uint _dna) private {
         zombies.push(Zombie(_name, _dna));
+    }
+
+    function _generateRandomDna(string calldata _str) private view returns (uint) {
+
     }
 }
