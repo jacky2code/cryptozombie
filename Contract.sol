@@ -23,6 +23,8 @@ contract ZombieFactory {
         zombies.push(Zombie(_name, _dna));
         // 这里触发事件
         uint id = zombies.length -1;
+        zombieToOwner[id] = msg.sender;
+        ownerZombieCount[msg.sender]++;
         emit NewZombie(id, _name, _dna);
     }
 
