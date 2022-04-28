@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.19;
+pragma solidity >= 0.4.19;
 
 contract ZombieFactory {
     uint dnaDigits = 16;
@@ -17,6 +17,7 @@ contract ZombieFactory {
     }
 
     function _generateRandomDna(string calldata _str) private view returns (uint) {
-
+        uint rand = uint(keccak256(abi.encode(_str)));
+        return rand % dnaModulus;
     }
 }
