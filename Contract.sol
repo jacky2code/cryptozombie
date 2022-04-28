@@ -20,4 +20,9 @@ contract ZombieFactory {
         uint rand = uint(keccak256(abi.encode(_str)));
         return rand % dnaModulus;
     }
+
+    function createRandomZombie(string calldata _name) public {
+        uint randDna = _generateRandomDna(_name);
+        _createZombie(_name, randDna);
+    }
 }
