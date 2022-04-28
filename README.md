@@ -661,11 +661,11 @@ YourContract.IntegersAdded(function(error, result) {
 
 我们想每当一个僵尸创造出来时，我们的前端都能监听到这个事件，并将它显示出来。
 
-1。 定义一个 `事件` 叫做 `NewZombie`。 它有3个参数: `zombieId` (`uint`)， `name` (`string`)， 和 `dna` (`uint`)。
+1. 定义一个 `事件` 叫做 `NewZombie`。 它有3个参数: `zombieId` (`uint`)， `name` (`string`)， 和 `dna` (`uint`)。
 
-2。 修改 `_createZombie` 函数使得当新僵尸造出来并加入 `zombies`数组后，生成事件`NewZombie`。
+2. 修改 `_createZombie` 函数使得当新僵尸造出来并加入 `zombies`数组后，生成事件`NewZombie`。
 
-3。 需要定义僵尸`id`。 `array.push()` 返回数组的长度类型是`uint` - 因为数组的第一个元素的索引是 0， `array.push() - 1` 将是我们加入的僵尸的索引。 `zombies.push() - 1` 就是 `id`，数据类型是 `uint`。在下一行中你可以把它用到 `NewZombie` 事件中。
+3. 需要定义僵尸`id`。 `array.push()` 返回数组的长度类型是`uint` - 因为数组的第一个元素的索引是 0， `array.push() - 1` 将是我们加入的僵尸的索引。 `zombies.push() - 1` 就是 `id`，数据类型是 `uint`。在下一行中你可以把它用到 `NewZombie` 事件中。
 
 ``` solidity
 // SPDX-License-Identifier: MIT
@@ -777,11 +777,100 @@ function generateZombie(id, name, dna) {
 
 <img src="https://markdown-res.oss-cn-hangzhou.aliyuncs.com/mdImgs/2022/04/28/20220428145457.png" align="center" style="width:500px" />
 
+##### 太棒啦！你完成了 CryptoZombies 的第一个课程!
+
+你离自己编译区块链游戏跨出了很大的一步。
+
+##### 跟你的朋友们晒一晒你新的僵尸吧！
+
+这是你的僵尸的永久地址:
+
+https://share.cryptozombies.io/zh/lesson/1/share/GG?id=Y3p8MjEwMTY2
+
+点击以下按钮后分享:
+
+[![Twitter](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAP1BMVEVMaXEtquEtquEtquEtquEtquEtquEtquEtquEtquH///8tquEjp+B6yu1cvui54/ZJtubu+f2b1/HZ8Po5r+NIpyL0AAAACnRSTlMAri5RyBgL5nKQDNswyAAAAixJREFUeNqll+16rCAMhAVRwIRv7v9aT3dP+6QGFtS+v3dmhwRjXD6xSWOF0l8oYc26LbeQRmg4oZWRV9W7UdBFme2SXMNH9NyCy1uLfSTfBExRgxCrhgvo9WN8uIjp6y1cRvQKIeAGan/2/4R4eH7CsvrDbdZT/zXcRsunBaRC3igAIg7KsOuZGmKM8O1BTnrrBMCOPuaSjlRyxFcSH5EitAFcRa536fhPclh9KJVHWH//2REAmf4gypeXQ/5QqNOvmQPGby2l8L8ivBohgcB8MAcMZ4PgSmC3yXCDo3hECsApFc+dFMzgRY6IVIFGTyh2i9H/HPVlga1BU2O5SDhRfp3WV2wMHPJHyjRNI1LIYWJg2SCpmJliYiDODyLm4MLQwDMDtShgXRgTmYFeNLAuDCkAQwPAMjYIODSYR3ATA95HToqtgQJgGcr4BNxAAKPGnOZNpDZaniCnNA1AiGYiYxzeIo6lgTYvY8be+2nTVx0KdAwkjUQCfUjHcBKdhqKBBsTq0uQK0EiTHT36MtITKx/rb6oLTf6+Xu/szeadd7lTgFwReli+HMTQvT805hmSv1wRYy7s8CRvEJ39BBF8DiW9tSVkX7m8DUARaJmo/ov4LuqVPWtXbSeHWnq50yHuI/+45pk/L5oM8XDH6xby2VfHLu7qny/sdn/8ycPrz5Hq3pLdsls9i78tY7ahhZXLnM18sNAkn7CvVrXqdV/uIFcrlH6jhF3lJ/U/pHGLPOYIuhYAAAAASUVORK5CYII=)](https://twitter.com/share?text=我刚完成了%23CryptoZombies 的第一课！学会了如何在%23Ethereum 上搭建游戏。看我的部队里的第一个僵尸!&url=https%3A%2F%2Fshare.cryptozombies.io%2Fzh%2Flesson%2F1%2Fshare%2FGG%3Fid%3DY3p8MjEwMTY2) [![Facebook](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAP1BMVEUAAAA8W5s8W5s8W5s8W5s8W5s8W5s8W5s8W5s8W5v///8zVJdDYZ/2+Pvp7PRYc6pIZqKFmcGpt9Ti5/HP1+dNCs8sAAAACnRSTlMAKEf/x2qq5RGK98Na8wAAAcFJREFUeNqll9GSgyAMRYEEAioqtf//rYuzdJm6xiic6es9wlUKKA5vbHBIGXTBGq8eoa0j+ILQ6rtpbxFOQetvxQlYKIiKEmche/14ByJ40YUhuAEZdvhwk3CeD3Abd9algwegF54v4h7Nf8w/oQfDZsdp/QUOmK/3T0x8Te9tjjvb0UBaLnBM8/AhrhdFWia/xOGPeYUjQZoAvIdLAXlhAGm4FkAQGnzlHNNBQZcBCDOIr0ya2EWBTH7aiiCNO5A5bUGDIIhrDZ99TVYSzNP1wkZRsAILsu9gzHwEwHWQ0cwymlIuPtaXkDmfiGUqmEq4snElBG7+B94j88fibgpeI9Mi9glI0blgPgrSQ8EWY+wRwJIpo4hpyazwTLB/OXUtZIAR1BLZHuKyp1mB6xOgCn0Cp2yfICjTJ7DKU5dAK4U9Air7erPAZYHuERiVwTZB3dxsuyCUra1ZoMvxqFXg6vbeJtCqYCWBeN7EFgH5KtDECjKMQIvHvFRg9iT5oDoW7h1VHTwC1RGPnYdt5V1DvvHA7nzbjav2z6Kx7cpU8UEahHhz1JcKp/mkrKBQ4iLeBPyffniD1+X2X+7/7LN/AECLPD/4xJvtAAAAAElFTkSuQmCC)](http://www.facebook.com/sharer.php?u=https%3A%2F%2Fshare.cryptozombies.io%2Fzh%2Flesson%2F1%2Fshare%2FGG%3Fid%3DY3p8MjEwMTY2) [加入我们的Telegram](https://t.me/loomnetworkdev)
 
 
 
+### 1.2 僵尸攻击人类
+
+#### 第1章 第二课概览
+
+在第一课中，我们创建了一个函数用来生成僵尸，并且将它放入区块链上的僵尸数据库中。 在第二课里，我们会让我们的 app 看起来更像一个游戏： 它得支持多用户，并且采用更加有趣,而不仅仅使用随机的方式，来生成新的僵尸。
+
+如何生成新的僵尸呢？通过让现有的僵尸猎食其他生物！
+
+##### 僵尸猎食
+
+僵尸猎食的时候，僵尸病毒侵入猎物，这些病毒会将猎物变为新的僵尸，加入你的僵尸大军。系统会通过猎物和猎食者僵尸的DNA计算出新僵尸的DNA。
+
+僵尸最喜欢猎食什么物种呢？ 等你学完第二课就知道了！
+
+##### 实战演习
+
+右边是一个简单的猎食演示。点击一个“人”，看看僵尸猎食的时候会发生什么? 可见，新僵尸的DNA是通过从原来的僵尸的DNA, 加上猎物的DNA计算得来的。
+
+学完这一章，请点击“下一章”， 我们该让游戏支持多玩家模式了。
+
+<img src="/Users/jacky/Library/Application Support/typora-user-images/image-20220428150136864.png" align="center" style="width:500px" />
+
+<img src="https://markdown-res.oss-cn-hangzhou.aliyuncs.com/mdImgs/2022/04/28/20220428150659.png" align="center" style="width:500px" />
 
 
 
+#### 第2章: 映射（Mapping）和地址（Address）
 
+我们通过给数据库中的僵尸指定“主人”， 来支持“多玩家”模式。
+
+如此一来，我们需要引入2个新的数据类型：`mapping`（映射） 和 `address`（地址）。
+
+##### Addresses （地址）
+
+以太坊区块链由 **_ account _** (账户)组成，你可以把它想象成银行账户。一个帐户的余额是 **_以太_** （在以太坊区块链上使用的币种），你可以和其他帐户之间支付和接受以太币，就像你的银行帐户可以电汇资金到其他银行帐户一样。
+
+每个帐户都有一个“地址”，你可以把它想象成银行账号。这是账户唯一的标识符，它看起来长这样：
+
+```bash
+0x0cE446255506E92DF41614C46F1d6df9Cc969183
+```
+
+（这是 CryptoZombies 团队的地址，如果你喜欢 CryptoZombies 的话，请打赏我们一些以太币！😉）
+
+我们将在后面的课程中介绍地址的细节，现在你只需要了解**地址属于特定用户（或智能合约）的**。
+
+所以我们可以指定“地址”作为僵尸主人的 ID。当用户通过与我们的应用程序交互来创建新的僵尸时，新僵尸的所有权被设置到调用者的以太坊地址下。
+
+##### Mapping（映射）
+
+在第1课中，我们看到了 **_ 结构体 _** 和 **_ 数组 _** 。 **_映射_** 是另一种在 Solidity 中存储有组织数据的方法。
+
+映射是这样定义的：
+
+```solidity
+//对于金融应用程序，将用户的余额保存在一个 uint类型的变量中：
+mapping (address => uint) public accountBalance;
+//或者可以用来通过userId 存储/查找的用户名
+mapping (uint => string) userIdToName;
+```
+
+映射本质上是存储和查找数据所用的键-值对。在第一个例子中，键是一个 `address`，值是一个 `uint`，在第二个例子中，键是一个`uint`，值是一个 `string`。
+
+##### 实战演习
+
+为了存储僵尸的所有权，我们会使用到两个映射：一个记录僵尸拥有者的地址，另一个记录某地址所拥有僵尸的数量。
+
+1.创建一个叫做 `zombieToOwner` 的映射。其键是一个`uint`（我们将根据它的 id 存储和查找僵尸），值为 `address`。映射属性为`public`。
+
+2.创建一个名为 `ownerZombieCount` 的映射，其中键是 `address`，值是 `uint`。
+
+``` solidity
+//... other code ...
+Zombie[] public zombies;
+// 记录僵尸拥有者地址
+mapping(uint => address) public zombieToOwner;
+// 记录某地址所拥有的僵尸的数量
+mapping(address => uint) ownerZombieCount;
+//... other code ...
+```
 

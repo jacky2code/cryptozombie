@@ -14,6 +14,10 @@ contract ZombieFactory {
     }
 
     Zombie[] public zombies;
+    // 记录僵尸拥有者地址
+    mapping(uint => address) public zombieToOwner;
+    // 记录某地址所拥有的僵尸的数量
+    mapping(address => uint) ownerZombieCount;
 
     function _createZombie(string memory _name, uint _dna) private {
         zombies.push(Zombie(_name, _dna));
