@@ -936,9 +936,85 @@ emit NewZombie(id, _name, _dna);
 
 
 
+#### 第4章 Require
+
+在第一课中，我们成功让用户通过调用 `createRandomZombie`函数 并输入一个名字来创建新的僵尸。 但是，如果用户能持续调用这个函数来创建出无限多个僵尸加入他们的军团，这游戏就太没意思了！
+
+于是，我们作出限定：每个玩家只能调用一次这个函数。 这样一来，新玩家可以在刚开始玩游戏时通过调用它，为其军团创建初始僵尸。
+
+我们怎样才能限定每个玩家只调用一次这个函数呢？
+
+答案是使用`require`。 `require`使得函数在执行过程中，当不满足某些条件时抛出错误，并停止执行：
+
+```solidity
+function sayHiToVitalik(string _name) public returns (string) {
+  // 比较 _name 是否等于 "Vitalik". 如果不成立，抛出异常并终止程序
+  // (敲黑板: Solidity 并不支持原生的字符串比较, 我们只能通过比较
+  // 两字符串的 keccak256 哈希值来进行判断)
+  require(keccak256(_name) == keccak256("Vitalik"));
+  // 如果返回 true, 运行如下语句
+  return "Hi!";
+}
+```
+
+如果你这样调用函数 `sayHiToVitalik（“Vitalik”）` ,它会返回“Hi！”。而如果调用的时候使用了其他参数，它则会抛出错误并停止执行。
+
+因此，在调用一个函数之前，用 `require` 验证前置条件是非常有必要的。
+
+##### 实战演习
+
+在我们的僵尸游戏中，我们不希望用户通过反复调用 `createRandomZombie` 来給他们的军队创建无限多个僵尸 —— 这将使得游戏非常无聊。
+
+我们使用了 `require` 来确保这个函数只有在每个用户第一次调用它的时候执行，用以创建初始僵尸。
+
+1. 在 `createRandomZombie` 的前面放置 `require` 语句。 使得函数先检查 `ownerZombieCount [msg.sender]` 的值为 `0` ，不然就抛出一个错误。
+
+> 注意：在 Solidity 中，关键词放置的顺序并不重要
+>
+> - 虽然参数的两个位置是等效的。 但是，由于我们的答案检查器比较呆板，它只能认定其中一个为正确答案
+> - 于是在这里，我们就约定把`ownerZombieCount [msg.sender]`放前面吧
+
+``` solidity
+function createRandomZombie(string _name) public {
+    // start here
+    require(ownerZombieCount[msg.sender] == 0);
+    uint randDna = _generateRandomDna(_name);
+    _createZombie(_name, randDna);
+}
+```
 
 
 
+#### 第5章: 继承（Inheritance）
 
+我们的游戏代码越来越长。 当代码过于冗长的时候，最好将代码和逻辑分拆到多个不同的合约中，以便于管理。
 
+有个让 Solidity 的代码易于管理的功能，就是合约 ***inheritance*** (继承)：
+
+```solidity
+contract Doge {
+  function catchphrase() public returns (string) {
+    return "So Wow CryptoDoge";
+  }
+}
+
+contract BabyDoge is Doge {
+  function anotherCatchphrase() public returns (string) {
+    return "Such Moon BabyDoge";
+  }
+}
+```
+
+由于 `BabyDoge` 是从 `Doge` 那里 ***inherits*** （继承)过来的。 这意味着当你编译和部署了 `BabyDoge`，它将可以访问 `catchphrase()` 和 `anotherCatchphrase()`和其他我们在 `Doge` 中定义的其他公共函数。
+
+这可以用于逻辑继承（比如表达子类的时候，`Cat` 是一种 `Animal`）。 但也可以简单地将类似的逻辑组合到不同的合约中以组织代码。
+
+##### 实战演习
+
+在接下来的章节中，我们将要为僵尸实现各种功能，让它可以“猎食”和“繁殖”。 通过将这些运算放到父类 `ZombieFactory` 中，使得所有 `ZombieFactory` 的继承者合约都可以使用这些方法。
+
+1. 在 `ZombieFactory` 下创建一个叫 `ZombieFeeding` 的合约，它是继承自 `ZombieFactory 合约的。
+
+``` solidity
+```
 
