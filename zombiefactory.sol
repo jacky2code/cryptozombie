@@ -19,7 +19,7 @@ contract ZombieFactory {
     // 记录某地址所拥有的僵尸的数量
     mapping(address => uint) ownerZombieCount;
 
-    function _createZombie(string memory _name, uint _dna) private {
+    function _createZombie(string memory _name, uint _dna) internal {
         zombies.push(Zombie(_name, _dna));
         // 这里触发事件
         uint id = zombies.length -1;
