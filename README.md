@@ -1016,5 +1016,14 @@ contract BabyDoge is Doge {
 1. 在 `ZombieFactory` 下创建一个叫 `ZombieFeeding` 的合约，它是继承自 `ZombieFactory 合约的。
 
 ``` solidity
+contract ZombieFactory {
+	// other code
+}
+contract ZombieFeeding is ZombieFactory {
+}
 ```
+
+
+
+
 
