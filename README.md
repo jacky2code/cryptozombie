@@ -1364,3 +1364,39 @@ contract KittyInterface {
 }
 ```
 
+
+
+#### 第11章 使用接口
+
+继续前面 `NumberInterface` 的例子，我们既然将接口定义为：
+
+```solidity
+contract NumberInterface {
+  function getNum(address _myAddress) public view returns (uint);
+}
+```
+
+我们可以在合约中这样使用：
+
+```solidity
+contract MyContract {
+  address NumberInterfaceAddress = 0xab38...;
+  // ^ 这是FavoriteNumber合约在以太坊上的地址
+  NumberInterface numberContract = NumberInterface(NumberInterfaceAddress);
+  // 现在变量 `numberContract` 指向另一个合约对象
+
+  function someFunction() public {
+    // 现在我们可以调用在那个合约中声明的 `getNum`函数:
+    uint num = numberContract.getNum(msg.sender);
+    // ...在这儿使用 `num`变量做些什么
+  }
+}
+```
+
+通过这种方式，只要将您合约的可见性设置为`public`(公共)或`external`(外部)，它们就可以与以太坊区块链上的任何其他合约进行交互。
+
+##### 实战演习
+
+我们来建个自己的合约去读取另一个智能合约-- CryptoKitties 的内容吧！
+
+1. 我已经将代码中 CryptoKitties 合约的地址保存在一个名为 `ckAddress` 的变量中。在下一行中，请创建一个名为 `kittyContract` 的 KittyInterface，并用 `ckAddress` 为它初始化 —— 就像我们为 `numberContract`所做的一样。
