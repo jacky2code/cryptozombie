@@ -1284,7 +1284,7 @@ contract LuckyNumber {
 首先，我们定义 `LuckyNumber` 合约的 ***interface*** ：
 
 ```solidity
-contract NumberInterface {
+interface NumberInterface {
   function getNum(address _myAddress) public view returns (uint);
 }
 ```
@@ -1345,7 +1345,7 @@ function getKitty(uint256 _id) external view returns (
 2.在interface里定义了 `getKitty` 函数（不过是复制/粘贴上面的函数，但在 `returns` 语句之后用分号，而不是大括号内的所有内容。
 
 ``` solidity
-contract KittyInterface {
+interface KittyInterface {
     function getKitty(uint256 _id)
         external
         view
@@ -1371,7 +1371,7 @@ contract KittyInterface {
 继续前面 `NumberInterface` 的例子，我们既然将接口定义为：
 
 ```solidity
-contract NumberInterface {
+interface NumberInterface {
   function getNum(address _myAddress) public view returns (uint);
 }
 ```
@@ -1400,3 +1400,61 @@ contract MyContract {
 我们来建个自己的合约去读取另一个智能合约-- CryptoKitties 的内容吧！
 
 1. 我已经将代码中 CryptoKitties 合约的地址保存在一个名为 `ckAddress` 的变量中。在下一行中，请创建一个名为 `kittyContract` 的 KittyInterface，并用 `ckAddress` 为它初始化 —— 就像我们为 `numberContract`所做的一样。
+
+
+
+#### 第12章 处理多返回值
+
+`getKitty` 是我们所看到的第一个返回多个值的函数。我们来看看是如何处理的：
+
+```solidity
+function multipleReturns() internal returns(uint a, uint b, uint c) {
+  return (1, 2, 3);
+}
+
+function processMultipleReturns() external {
+  uint a;
+  uint b;
+  uint c;
+  // 这样来做批量赋值:
+  (a, b, c) = multipleReturns();
+}
+
+// 或者如果我们只想返回其中一个变量:
+function getLastReturnValue() external {
+  uint c;
+  // 可以对其他字段留空:
+  (,,c) = multipleReturns();
+}
+```
+
+##### 实战演习
+
+是时候与 CryptoKitties 合约交互起来了！
+
+我们来定义一个函数，从 kitty 合约中获取它的基因：
+
+1. 创建一个名为 `feedOnKitty` 的函数。它需要2个 `uint` 类型的参数，`_zombieId` 和`_kittyId` ，这是一个 `public` 类型的函数。
+
+2. 函数首先要声明一个名为 `kittyDna` 的 `uint`。
+
+   > 注意：在我们的 `KittyInterface` 中，`genes` 是一个 `uint256` 类型的变量，但是如果你记得，我们在第一课中提到过，`uint` 是 `uint256` 的别名，也就是说它们是一回事。
+
+3. 这个函数接下来调用 `kittyContract.getKitty`函数, 传入 `_kittyId` ，将返回的 `genes` 存储在 `kittyDna` 中。记住 —— `getKitty` 会返回一大堆变量。 （确切地说10个 - 我已经为你数过了，不错吧！）。但是我们只关心最后一个-- `genes`。数逗号的时候小心点哦！
+
+4. 最后，函数调用了 `feedAndMultiply` ，并传入了 `_zombieId` 和 `kittyDna` 两个参数。
+
+``` solidity
+function feedOnKitty(uint _zombieId, uint _kittyId) public {
+    uint kittyDna;
+    (,,,,,,,,,kittyDna) = kittyContract.getKitty(_kittyId);
+    feedAndMultiply(_zombieId, kittyDna);
+}
+```
+
+
+
+
+
+
+
