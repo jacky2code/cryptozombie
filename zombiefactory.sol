@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >= 0.4.19;
 
-contract ZombieFactory {
+// 1. 在这里导入
+import "./ownable.sol";
+// 2. 在这里继承:
+contract ZombieFactory is Ownable {
 
     // 这里建立事件
     event NewZombie(uint zombieId, string name, uint dna);
@@ -11,6 +14,9 @@ contract ZombieFactory {
     struct Zombie {
         string name;
         uint dna;
+        uint32 level;
+        // 冷却定时器，限制僵尸猎食的频率
+        uint32 readyTime;
     }
 
     Zombie[] public zombies;

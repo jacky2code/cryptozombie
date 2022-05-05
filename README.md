@@ -1728,3 +1728,148 @@ contract ZombieFactory is Ownable {
 }
 ```
 
+
+
+#### 第3章 onlyOwner 函数修饰符
+
+现在我们有了个基本版的合约 `ZombieFactory` 了，它继承自 `Ownable` 接口，我们也可以给 `ZombieFeeding` 加上 `onlyOwner` 函数修饰符。
+
+这就是合约继承的工作原理。记得：
+
+```
+ZombieFeeding 是个 ZombieFactory
+ZombieFactory 是个 Ownable
+```
+
+因此 `ZombieFeeding` 也是个 `Ownable`, 并可以通过 `Ownable` 接口访问父类中的函数/事件/修饰符。往后，`ZombieFeeding` 的继承者合约们同样也可以这么延续下去。
+
+##### 函数修饰符
+
+函数修饰符看起来跟函数没什么不同，不过关键字`modifier` 告诉编译器，这是个`modifier(修饰符)`，而不是个`function(函数)`。它不能像函数那样被直接调用，只能被添加到函数定义的末尾，用以改变函数的行为。
+
+咱们仔细读读 `onlyOwner`:
+
+```solidity
+/**
+ * @dev 调用者不是‘主人’，就会抛出异常
+ */
+modifier onlyOwner() {
+  require(msg.sender == owner);
+  _;
+}
+```
+
+`onlyOwner` 函数修饰符是这么用的：
+
+```solidity
+contract MyContract is Ownable {
+  event LaughManiacally(string laughter);
+
+  //注意！ `onlyOwner`上场 :
+  function likeABoss() external onlyOwner {
+    LaughManiacally("Muahahahaha");
+  }
+}
+```
+
+注意 `likeABoss` 函数上的 `onlyOwner` 修饰符。 当你调用 `likeABoss` 时，**首先执行** `onlyOwner` 中的代码， 执行到 `onlyOwner` 中的 `_;` 语句时，程序再返回并执行 `likeABoss` 中的代码。
+
+可见，尽管函数修饰符也可以应用到各种场合，但最常见的还是放在函数执行之前添加快速的 `require`检查。
+
+因为给函数添加了修饰符 `onlyOwner`，使得**唯有合约的主人**（也就是部署者）才能调用它。
+
+> 注意：主人对合约享有的特权当然是正当的，不过也可能被恶意使用。比如，万一，主人添加了个后门，允许他偷走别人的僵尸呢？
+
+> 所以非常重要的是，部署在以太坊上的 DApp，并不能保证它真正做到去中心，你需要阅读并理解它的源代码，才能防止其中没有被部署者恶意植入后门；作为开发人员，如何做到既要给自己留下修复 bug 的余地，又要尽量地放权给使用者，以便让他们放心你，从而愿意把数据放在你的 DApp 中，这确实需要个微妙的平衡。
+
+##### 实战演习
+
+现在我们可以限制第三方对 `setKittyContractAddress`的访问，除了我们自己，谁都无法去修改它。
+
+1. 将 `onlyOwner` 函数修饰符添加到 `setKittyContractAddress` 中。
+
+``` solidity
+function setKittyContractAddress(address _address) external onlyOwner {
+    kittyContract = KittyInterface(_address);
+}
+```
+
+
+
+#### 第4章 Gas
+
+厉害！现在我们懂了如何在禁止第三方修改我们的合约的同时，留个后门给咱们自己去修改。
+
+让我们来看另一种使得 Solidity 编程语言与众不同的特征：
+
+##### Gas - 驱动以太坊DApps的能源
+
+在 Solidity 中，你的用户想要每次执行你的 DApp 都需要支付一定的 ***gas***，gas 可以用以太币购买，因此，用户每次跑 DApp 都得花费以太币。
+
+一个 DApp 收取多少 gas 取决于功能逻辑的复杂程度。每个操作背后，都在计算完成这个操作所需要的计算资源，（比如，存储数据就比做个加法运算贵得多）， 一次操作所需要花费的 ***gas*** 等于这个操作背后的所有运算花销的总和。
+
+由于运行你的程序需要花费用户的真金白银，在以太坊中代码的编程语言，比其他任何编程语言都更强调优化。同样的功能，使用笨拙的代码开发的程序，比起经过精巧优化的代码来，运行花费更高，这显然会给成千上万的用户带来大量不必要的开销。
+
+##### 为什么要用 ***gas*** 来驱动？
+
+以太坊就像一个巨大、缓慢、但非常安全的电脑。当你运行一个程序的时候，网络上的每一个节点都在进行相同的运算，以验证它的输出 —— 这就是所谓的“去中心化” 由于数以千计的节点同时在验证着每个功能的运行，这可以确保它的数据不会被被监控，或者被刻意修改。
+
+可能会有用户用无限循环堵塞网络，抑或用密集运算来占用大量的网络资源，为了防止这种事情的发生，以太坊的创建者为以太坊上的资源制定了价格，想要在以太坊上运算或者存储，你需要先付费。
+
+> 注意：如果你使用侧链，倒是不一定需要付费，比如咱们在 Loom Network 上构建的 CryptoZombies 就免费。你不会想要在以太坊主网上玩儿“魔兽世界”吧？ - 所需要的 gas 可能会买到你破产。但是你可以找个算法理念不同的侧链来玩它。我们将在以后的课程中咱们会讨论到，什么样的 DApp 应该部署在太坊主链上，什么又最好放在侧链。
+
+##### 省 gas 的招数：结构封装 （Struct packing）
+
+在第1课中，我们提到除了基本版的 `uint` 外，还有其他变种 `uint`：`uint8`，`uint16`，`uint32`等。
+
+通常情况下我们不会考虑使用 `uint` 变种，因为无论如何定义 `uint`的大小，Solidity 为它保留256位的存储空间。例如，使用 `uint8` 而不是`uint`（`uint256`）不会为你节省任何 gas。
+
+除非，把 `uint` 绑定到 `struct` 里面。
+
+如果一个 `struct` 中有多个 `uint`，则尽可能使用较小的 `uint`, Solidity 会将这些 `uint` 打包在一起，从而占用较少的存储空间。例如：
+
+```
+struct NormalStruct {
+  uint a;
+  uint b;
+  uint c;
+}
+
+struct MiniMe {
+  uint32 a;
+  uint32 b;
+  uint c;
+}
+
+// 因为使用了结构打包，`mini` 比 `normal` 占用的空间更少
+NormalStruct normal = NormalStruct(10, 20, 30);
+MiniMe mini = MiniMe(10, 20, 30); 
+```
+
+所以，当 `uint` 定义在一个 `struct` 中的时候，尽量使用最小的整数子类型以节约空间。 并且把同样类型的变量放一起（即在 struct 中将把变量按照类型依次放置），这样 Solidity 可以将存储空间最小化。例如，有两个 `struct`：
+
+```
+uint c; uint32 a; uint32 b;` 和 `uint32 a; uint c; uint32 b;
+```
+
+前者比后者需要的gas更少，因为前者把`uint32`放一起了。
+
+##### 实战演习
+
+在本课中，咱们给僵尸添2个新功能：`level` 和 `readyTime` - 后者是用来实现一个“冷却定时器”，以限制僵尸猎食的频率。
+
+让我们回到 `zombiefactory.sol`。
+
+1. 为 `Zombie` 结构体 添加两个属性：`level`（`uint32`）和`readyTime`（`uint32`）。因为希望同类型数据打成一个包，所以把它们放在结构体的末尾。
+
+32位足以保存僵尸的级别和时间戳了，这样比起使用普通的`uint`（256位），可以更紧密地封装数据，从而为我们省点 gas。
+
+``` solidity
+struct Zombie {
+    string name;
+    uint dna;
+    uint32 level;
+    uint32 readyTime;
+}
+```
+
