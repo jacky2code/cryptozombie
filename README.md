@@ -1578,3 +1578,64 @@ ZombieFactory.NewZombie(function(error, result) {
 <img src="https://markdown-res.oss-cn-hangzhou.aliyuncs.com/mdImgs/2022/05/05/20220505101833.png" align="center" style="width:500px" />
 
 <img src="https://markdown-res.oss-cn-hangzhou.aliyuncs.com/mdImgs/2022/05/05/20220505101937.png" align="center" style="width:500px" />
+
+##### 你好棒！太棒啦！你完成了 CryptoZombies 的第二课!
+
+**成功解锁了:**
+
+- GG被升级到二级!
+- 无名～ 僵尸已加入你的部队! (别担心，第三节课里你会有机会改它的名字)
+
+##### 晒一晒你的 CryptoKitty-猎杀者！和你的朋友们分享！
+
+这是你的僵尸的永久地址，让你的朋友跟你一起猎杀 CryptoKitties:
+
+https://share.cryptozombies.io/zh/lesson/2/share/GG?id=Y3p8MjEwMTY2
+
+
+
+### 1.3 高级 Solidity 理论
+
+#### 第1章 智能协议的永固性
+
+到现在为止，我们讲的 Solidity 和其他语言没有质的区别，它长得也很像 JavaScript。
+
+但是，在有几点以太坊上的 DApp 跟普通的应用程序有着天壤之别。
+
+第一个例子，在你把智能协议传上以太坊之后，它就变得***不可更改\***, 这种永固性意味着你的代码永远不能被调整或更新。
+
+你编译的程序会一直，永久的，不可更改的，存在以太坊上。这就是 Solidity 代码的安全性如此重要的一个原因。如果你的智能协议有任何漏洞，即使你发现了也无法补救。你只能让你的用户们放弃这个智能协议，然后转移到一个新的修复后的合约上。
+
+但这恰好也是智能合约的一大优势。代码说明一切。如果你去读智能合约的代码，并验证它，你会发现，一旦函数被定义下来，每一次的运行，程序都会严格遵照函数中原有的代码逻辑一丝不苟地执行，完全不用担心函数被人篡改而得到意外的结果。
+
+##### 外部依赖关系
+
+在第2课中，我们将加密小猫（CryptoKitties）合约的地址硬编码到 DApp 中去了。有没有想过，如果加密小猫出了点问题，比方说，集体消失了会怎么样？ 虽然这种事情几乎不可能发生，但是，如果小猫没了，我们的 DApp 也会随之失效 -- 因为我们在 DApp 的代码中用“硬编码”的方式指定了加密小猫的地址，如果这个根据地址找不到小猫，我们的僵尸也就吃不到小猫了，而按照前面的描述，我们却没法修改合约去应付这个变化！
+
+因此，我们不能硬编码，而要采用“函数”，以便于 DApp 的关键部分可以以参数形式修改。
+
+比方说，我们不再一开始就把猎物地址给写入代码，而是写个函数 `setKittyContractAddress`, 运行时再设定猎物的地址，这样我们就可以随时去锁定新的猎物，也不用担心加密小猫集体消失了。
+
+##### 实战演习
+
+请修改第2课的代码，使得可以通过程序更改 CryptoKitties 合约地址。
+
+1. 删除采用硬编码 方式的 `ckAddress` 代码行。
+2. 之前创建 `kittyContract` 变量的那行代码，修改为对 `kittyContract` 变量的声明 -- 暂时不给它指定具体的实例。
+3. 创建名为 `setKittyContractAddress` 的函数， 它带一个参数 `_address`（`address`类型）， 可见性设为`external`。
+4. 在函数内部，添加一行代码，将 `kittyContract` 变量设置为返回值：`KittyInterface（_address）`。
+
+> 注意：你可能会注意到这个功能有个安全漏洞，别担心 - 咱们到下一章里解决它;）
+
+``` solidity
+contract ZombieFeeding is ZombieFactory {
+
+    KittyInterface kittyContract;
+
+    function setKittyContractAddress(address _address) external {
+        kittyContract = KittyInterface(_address);
+    }
+    // ... other code ...
+}
+```
+
