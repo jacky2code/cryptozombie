@@ -2177,3 +2177,153 @@ function getZombiesByOwner(address _owner) external view returns (uint []) {
 
 
 
+#### 第11章 存储非常昂贵
+
+Solidity 使用`storage`(存储)是相当昂贵的，”写入“操作尤其贵。
+
+这是因为，无论是写入还是更改一段数据， 这都将永久性地写入区块链。”永久性“啊！需要在全球数千个节点的硬盘上存入这些数据，随着区块链的增长，拷贝份数更多，存储量也就越大。这是需要成本的！
+
+为了降低成本，不到万不得已，避免将数据写入存储。这也会导致效率低下的编程逻辑 - 比如每次调用一个函数，都需要在 `memory`(内存) 中重建一个数组，而不是简单地将上次计算的数组给存储下来以便快速查找。
+
+在大多数编程语言中，遍历大数据集合都是昂贵的。但是在 Solidity 中，使用一个标记了`external view`的函数，遍历比 `storage` 要便宜太多，因为 `view` 函数不会产生任何花销。 （gas可是真金白银啊！）。
+
+我们将在下一章讨论`for`循环，现在我们来看一下看如何如何在内存中声明数组。
+
+##### 在内存中声明数组
+
+在数组后面加上 `memory`关键字， 表明这个数组是仅仅在内存中创建，不需要写入外部存储，并且在函数调用结束时它就解散了。与在程序结束时把数据保存进 `storage` 的做法相比，内存运算可以大大节省gas开销 -- 把这数组放在`view`里用，完全不用花钱。
+
+以下是申明一个内存数组的例子：
+
+```solidity
+function getArray() external pure returns(uint[]) {
+  // 初始化一个长度为3的内存数组
+  uint[] memory values = new uint[](3);
+  // 赋值
+  values.push(1);
+  values.push(2);
+  values.push(3);
+  // 返回数组
+  return values;
+}
+```
+
+这个小例子展示了一些语法规则，下一章中，我们将通过一个实际用例，展示它和 `for` 循环结合的做法。
+
+> 注意：内存数组 **必须** 用长度参数（在本例中为`3`）创建。目前不支持 `array.push()`之类的方法调整数组大小，在未来的版本可能会支持长度修改。
+
+##### 实战演习
+
+我们要要创建一个名为 `getZombiesByOwner` 的函数，它以`uint []`数组的形式返回某一用户所拥有的所有僵尸。
+
+1. 声明一个名为`result`的`uint [] memory'` （内存变量数组）
+2. 将其设置为一个新的 `uint` 类型数组。数组的长度为该 `_owner` 所拥有的僵尸数量，这可通过调用 `ownerZombieCount [_ owner]` 来获取。
+3. 函数结束，返回 `result` 。目前它只是个空数列，我们到下一章去实现它。
+
+``` solidity
+function getZombiesByOwner(address _owner) external view returns(uint[]) {
+    uint[] memory result = new uint[](ownerZombieCount[_owner]);
+    return result;
+  }
+```
+
+
+
+#### 第12章 For 循环
+
+在之前的章节中，我们提到过，函数中使用的数组是运行时在内存中通过 `for` 循环实时构建，而不是预先建立在存储中的。
+
+为什么要这样做呢？
+
+为了实现 `getZombiesByOwner` 函数，一种“无脑式”的解决方案是在 `ZombieFactory` 中存入”主人“和”僵尸军团“的映射。
+
+```solidity
+mapping (address => uint[]) public ownerToZombies
+```
+
+然后我们每次创建新僵尸时，执行 `ownerToZombies [owner] .push（zombieId）` 将其添加到主人的僵尸数组中。而 `getZombiesByOwner` 函数也非常简单：
+
+```solidity
+function getZombiesByOwner(address _owner) external view returns (uint[]) {
+  return ownerToZombies[_owner];
+}
+```
+
+##### 这个做法有问题
+
+做法倒是简单。可是如果我们需要一个函数来把一头僵尸转移到另一个主人名下（我们一定会在后面的课程中实现的），又会发生什么？
+
+这个“换主”函数要做到：
+
+1.将僵尸push到新主人的 `ownerToZombies` 数组中， 2.从旧主的 `ownerToZombies` 数组中移除僵尸， 3.将旧主僵尸数组中“换主僵尸”之后的的每头僵尸都往前挪一位，把挪走“换主僵尸”后留下的“空槽”填上， 4.将数组长度减1。
+
+但是第三步实在是太贵了！因为每挪动一头僵尸，我们都要执行一次写操作。如果一个主人有20头僵尸，而第一头被挪走了，那为了保持数组的顺序，我们得做19个写操作。
+
+由于写入存储是 Solidity 中最费 gas 的操作之一，使得换主函数的每次调用都非常昂贵。更糟糕的是，每次调用的时候花费的 gas 都不同！具体还取决于用户在原主军团中的僵尸头数，以及移走的僵尸所在的位置。以至于用户都不知道应该支付多少 gas。
+
+> 注意：当然，我们也可以把数组中最后一个僵尸往前挪来填补空槽，并将数组长度减少一。但这样每做一笔交易，都会改变僵尸军团的秩序。
+
+由于从外部调用一个 `view` 函数是免费的，我们也可以在 `getZombiesByOwner` 函数中用一个for循环遍历整个僵尸数组，把属于某个主人的僵尸挑出来构建出僵尸数组。那么我们的 `transfer` 函数将会便宜得多，因为我们不需要挪动存储里的僵尸数组重新排序，总体上这个方法会更便宜，虽然有点反直觉。
+
+##### 使用 `for` 循环
+
+`for`循环的语法在 Solidity 和 JavaScript 中类似。
+
+来看一个创建偶数数组的例子：
+
+```solidity
+function getEvens() pure external returns(uint[]) {
+  uint[] memory evens = new uint[](5);
+  // 在新数组中记录序列号
+  uint counter = 0;
+  // 在循环从1迭代到10：
+  for (uint i = 1; i <= 10; i++) {
+    // 如果 `i` 是偶数...
+    if (i % 2 == 0) {
+      // 把它加入偶数数组
+      evens[counter] = i;
+      //索引加一， 指向下一个空的‘even’
+      counter++;
+    }
+  }
+  return evens;
+}
+```
+
+这个函数将返回一个形为 `[2,4,6,8,10]` 的数组。
+
+##### 实战演习
+
+我们回到 `getZombiesByOwner` 函数， 通过一条 `for` 循环来遍历 DApp 中所有的僵尸， 将给定的‘用户id'与每头僵尸的‘主人’进行比较，并在函数返回之前将它们推送到我们的`result` 数组中。
+
+1.声明一个变量 `counter`，属性为 `uint`，设其值为 `0` 。我们用这个变量作为 `result` 数组的索引。
+
+2.声明一个 `for` 循环， 从 `uint i = 0` 到 `i <zombies.length`。它将遍历数组中的每一头僵尸。
+
+3.在每一轮 `for` 循环中，用一个 `if` 语句来检查 `zombieToOwner [i]` 是否等于 `_owner`。这会比较两个地址是否匹配。
+
+4.在 `if` 语句中：
+
+1. 通过将 `result [counter]` 设置为 `i`，将僵尸ID添加到 `result` 数组中。
+2. 将counter加1（参见上面的for循环示例）。
+
+就是这样 - 这个函数能返回 `_owner` 所拥有的僵尸数组，不花一分钱 gas。
+
+``` solidity
+function getZombiesByOwner(address _owner)
+    external
+    view
+    returns (uint256[] memory)
+{
+    uint256[] memory result = new uint256[](ownerZombieCount[_owner]);
+    uint256 counter = 0;
+    for (uint256 i = 0; i < zombies.length; i++) {
+        if (zombieToOwner[i] == _owner) {
+            result[counter] = i;
+            counter++;
+        }
+    }
+    return result;
+}
+```
+
