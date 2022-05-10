@@ -4,9 +4,19 @@ pragma solidity >=0.4.19;
 import "./zombiefeeding.sol";
 
 contract ZombieHelper is ZombieFeeding {
+
+    // 升级所需支付费用
+    uint levelUpFee = 0.001 ether;
+
     modifier aboveLevel(uint256 _level, uint256 _zombieId) {
         require(zombies[_zombieId].level >= _level);
         _;
+    }
+
+    // 支付eth，升级僵尸 
+    function levelUp(uint _zombieId) external payable {
+        require(msg.value == levelUpFee);
+        zombies[_zombieId].level++;
     }
 
     // 修改僵尸名字
