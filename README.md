@@ -2499,5 +2499,13 @@ msg.sender.transfer(msg.value - itemFee);
    b. 这个函数应该设置 `levelUpFee` 等于 `_fee`。
 
 ``` solidity
+// 从合约中提现以太
+function withdraw() external onlyOwner {
+    payable(owner).transfer(address(this).balance);
+}
+// 设置支付费用 
+function setLevelUpfee(uint _fee) external onlyOwner {
+    levelUpFee = _fee;
+}
 ```
 

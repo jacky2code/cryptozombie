@@ -13,6 +13,15 @@ contract ZombieHelper is ZombieFeeding {
         _;
     }
 
+    // 从合约中提现以太
+    function withdraw() external onlyOwner {
+        payable(owner).transfer(address(this).balance);
+    }
+    // 设置支付费用 
+    function setLevelUpfee(uint _fee) external onlyOwner {
+        levelUpFee = _fee;
+    }
+
     // 支付eth，升级僵尸 
     function levelUp(uint _zombieId) external payable {
         require(msg.value == levelUpFee);
