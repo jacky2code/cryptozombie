@@ -2509,3 +2509,31 @@ function setLevelUpfee(uint _fee) external onlyOwner {
 }
 ```
 
+
+
+#### 第3章: 僵尸战斗
+
+在我们学习了可支付函数和合约余额之后，是时候为僵尸战斗添加功能了。
+
+遵循上一章的格式，我们新建一个攻击功能合约，并将代码放进新的文件中，引入上一个合约。
+
+##### 实战演习
+
+再来新建一个合约吧。熟能生巧。
+
+如果你不记得怎么做了, 查看一下 `zombiehelper.sol` — 不过最好先试着做一下，检查一下你掌握的情况。
+
+1. 在文件开头定义 Solidity 的版本 `^0.4.19`.
+2. `import` 自 `zombiehelper.sol` .
+3. 声明一个新的 `contract`，命名为 `ZombieBattle`， 继承自`ZombieHelper`。函数体就先空着吧。
+
+``` solidity
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.4.19;
+
+import "./zombiehelper.sol";
+
+contract ZombieBattle is ZombieHelper {
+}
+```
+
