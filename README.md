@@ -2605,6 +2605,7 @@ contract ZombieBattle is ZombieHelper {
 
     function randMod(uint _modulus) internal returns(uint) {
         randNonce++;
+        // 根据 Solidity 版本，做相应更新
         return uint(keccak256(abi.encode(block.timestamp, msg.sender, randNonce))) % _modulus;
     }
 }
