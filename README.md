@@ -2655,7 +2655,7 @@ contract ZombieBattle is ZombieHelper {
 
 
 
-#### 第六章 重构通用逻辑
+#### 第6章 重构通用逻辑
 
 不管谁调用我们的 attack 函数 -- 我们想确保用户的确拥有他们用来攻击的僵尸。如果你能用其他人的僵尸来攻击将是一个很大的安全问题。
 
@@ -2716,6 +2716,37 @@ contract ZombieFeeding is ZombieFactory {
         _createZombie("NoName", newDna);
         _triggerCooldown(myZombie);
     }
+}
+```
+
+
+
+#### 第7章: 更多重构
+
+在 `zombiehelper.sol`里有几处地方，需要我们实现我们新的 `modifier`—— `ownerOf`。
+
+##### 实战演习
+
+1. 修改 `changeName()` 使其使用 `ownerOf`
+2. 修改 `changeDna()` 使其使用 `ownerOf`
+
+``` solidity
+// 修改僵尸名字
+function changeName(uint256 _zombieId, string calldata _newName)
+    external
+    aboveLevel(2, _zombieId)
+    ownerOf(_zombieId)
+{
+    zombies[_zombieId].name = _newName;
+}
+
+// 定制 DNA
+function changeDna(uint256 _zombieId, uint256 _newDna)
+    external
+    aboveLevel(20, _zombieId)
+    ownerOf(_zombieId)
+{
+    zombies[_zombieId].dna = _newDna;
 }
 ```
 

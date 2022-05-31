@@ -32,8 +32,8 @@ contract ZombieHelper is ZombieFeeding {
     function changeName(uint256 _zombieId, string calldata _newName)
         external
         aboveLevel(2, _zombieId)
+        ownerOf(_zombieId)
     {
-        require(msg.sender == zombieToOwner[_zombieId]);
         zombies[_zombieId].name = _newName;
     }
 
@@ -41,8 +41,8 @@ contract ZombieHelper is ZombieFeeding {
     function changeDna(uint256 _zombieId, uint256 _newDna)
         external
         aboveLevel(20, _zombieId)
+        ownerOf(_zombieId)
     {
-        require(msg.sender == zombieToOwner[_zombieId]);
         zombies[_zombieId].dna = _newDna;
     }
 
