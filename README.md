@@ -2511,7 +2511,7 @@ function setLevelUpfee(uint _fee) external onlyOwner {
 
 
 
-#### 第3章: 僵尸战斗
+#### 第3章 僵尸战斗
 
 在我们学习了可支付函数和合约余额之后，是时候为僵尸战斗添加功能了。
 
@@ -2607,6 +2607,114 @@ contract ZombieBattle is ZombieHelper {
         randNonce++;
         // 根据 Solidity 版本，做相应更新
         return uint(keccak256(abi.encode(block.timestamp, msg.sender, randNonce))) % _modulus;
+    }
+}
+```
+
+
+
+#### 第5章 僵尸对战
+
+我们的合约已经有了一些随机性的来源，可以用进我们的僵尸战斗中去计算结果。
+
+我们的僵尸战斗看起来将是这个流程：
+
+- 你选择一个自己的僵尸，然后选择一个对手的僵尸去攻击。
+- 如果你是攻击方，你将有70%的几率获胜，防守方将有30%的几率获胜。
+- 所有的僵尸（攻守双方）都将有一个 `winCount` 和一个 `lossCount`，这两个值都将根据战斗结果增长。
+- 若攻击方获胜，这个僵尸将升级并产生一个新僵尸。
+- 如果攻击方失败，除了失败次数将加一外，什么都不会发生。
+- 无论输赢，当前僵尸的冷却时间都将被激活。
+
+这有一大堆的逻辑需要处理，我们将把这些步骤分解到接下来的课程中去。
+
+##### 实战演习
+
+1. 给我们合约一个 `uint` 类型的变量，命名为 `attackVictoryProbability`, 将其值设定为 `70`。
+2. 创建一个名为 `attack`的函数。它将传入两个参数: `_zombieId` (`uint` 类型) 以及 `_targetId` (也是 `uint`)。它将是一个 `external` 函数。
+
+函数体先留空吧。
+
+``` solidity
+contract ZombieBattle is ZombieHelper {
+
+    uint randNonce = 0;
+    uint attackVictoryProbability = 70;
+
+    function randMod(uint _modulus) internal returns(uint) {
+        randNonce++;
+        // 根据 Solidity 版本，做相应更新
+        return uint(keccak256(abi.encode(block.timestamp, msg.sender, randNonce))) % _modulus;
+    }
+
+    function attack(uint _zombieId, uint _targetId) external {
+        
+    }
+}
+```
+
+
+
+#### 第六章 重构通用逻辑
+
+不管谁调用我们的 attack 函数 -- 我们想确保用户的确拥有他们用来攻击的僵尸。如果你能用其他人的僵尸来攻击将是一个很大的安全问题。
+
+你能想一下我们如何添加一个检查步骤来看看调用这个函数的人就是他们传入的 _zombieID de 拥有者么？
+
+想一想，看看你能不能自己找到一些答案。
+
+花点时间…… 参考我们前面课程的代码来获得灵感。
+
+答案在下面，在你有一些想法之前不要继续阅读。
+
+##### 答案
+
+我们在前面的课程里面已经做过很多次这样的检查了。 在 `changeName()`, `changeDna()`, 和 `feedAndMultiply()`里，我们做过这样的检查：
+
+```solidity
+require(msg.sender == zombieToOwner[_zombieId]);
+```
+
+这和我们 `attack` 函数将要用到的检查逻辑是相同的。 正因我们要多次调用这个检查逻辑，让我们把它移到它自己的 `modifier` 中来清理代码并避免重复编码。
+
+##### 实战演习
+
+我们回到了 `zombiefeeding.sol`， 因为这是我们第一次调用检查逻辑的地方。让我们把它重构进它自己的 `modifier`。
+
+1. 创建一个 `modifier`， 命名为 `ownerOf`。它将传入一个参数， `_zombieId` (一个 `uint`)。
+
+   它的函数体应该 `require` `msg.sender` 等于 `zombieToOwner[_zombieId]`， 然后继续这个函数剩下的内容。 如果你忘记了修饰符的写法，可以参考 `zombiehelper.sol`。
+
+2. 将这个函数的 `feedAndMultiply` 定义修改为其使用修饰符 `ownerOf`。
+
+3. 现在我们使用 `modifier`了，你可以删除这行了： `require(msg.sender == zombieToOwner[_zombieId]);`
+
+在 ZombieFeeding 中，修改如下：
+
+``` solidity
+contract ZombieFeeding is ZombieFactory {
+
+    KittyInterface kittyContract;
+
+    // 校验僵尸拥有者
+    modifier ownerOf(uint _zombieId) {
+        require(msg.sender == zombieToOwner[_zombieId]);
+        _;
+    }
+    
+    // ... other code ...
+    
+    function feedAndMultiply(uint256 _zombieId, uint256 _targetDna, string memory _species) internal ownerOf(_zombieId) {
+        Zombie storage myZombie = zombies[_zombieId];
+        require(_isReady(myZombie));
+        _targetDna = _targetDna % dnaModulus;
+        uint256 newDna = (myZombie.dna + _targetDna) / 2;
+        // 这里增加一个 if 语句
+        if(keccak256(abi.encode(_species)) == keccak256(abi.encode("kitty"))){
+            newDna = newDna - newDna % 100 + 99;
+        }
+        _createZombie("NoName", newDna);
+        _triggerCooldown(myZombie);
     }
 }
 ```
