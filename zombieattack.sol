@@ -14,7 +14,12 @@ contract ZombieBattle is ZombieHelper {
         return uint(keccak256(abi.encode(block.timestamp, msg.sender, randNonce))) % _modulus;
     }
 
-    function attack(uint _zombieId, uint _targetId) external {
-        
+    function attack(uint _zombieId, uint _targetId) external ownerOf(_zombieId) {
+        // 我方僵尸
+        Zombie storage myZombie = zombies[_zombieId];
+        // 攻击目标僵尸
+        Zombie storage enemyZombie = zombies[_targetId];
+        // 随机数确定战斗结果
+        uint rand = randMod(100);
     }
 }

@@ -2721,7 +2721,7 @@ contract ZombieFeeding is ZombieFactory {
 
 
 
-#### 第7章: 更多重构
+#### 第7章 更多重构
 
 在 `zombiehelper.sol`里有几处地方，需要我们实现我们新的 `modifier`—— `ownerOf`。
 
@@ -2747,6 +2747,37 @@ function changeDna(uint256 _zombieId, uint256 _newDna)
     ownerOf(_zombieId)
 {
     zombies[_zombieId].dna = _newDna;
+}
+```
+
+
+
+#### 第8章 回到攻击
+
+重构完成了，回到 `zombieattack.sol`。
+
+继续来完善我们的 `attack` 函数， 现在我们有了 `ownerOf` 修饰符来用了。
+
+##### 实战演习
+
+1. 将 `ownerOf` 修饰符添加到 `attack` 来确保调用者拥有`_zombieId`.
+
+2. 我们的函数所需要做的第一件事就是获得一个双方僵尸的 `storage` 指针， 这样我们才能很方便和它们交互：
+
+   a. 定义一个 `Zombie storage` 命名为 `myZombie`，使其值等于 `zombies[_zombieId]`。
+
+   b. 定义一个 `Zombie storage` 命名为 `enemyZombie`， 使其值等于 `zombies[_targetId]`。
+
+3. 我们将用一个0到100的随机数来确定我们的战斗结果。 定义一个 `uint`，命名为 `rand`， 设定其值等于 `randMod` 函数的返回值，此函数传入 `100`作为参数。
+
+``` solidity
+function attack(uint _zombieId, uint _targetId) external ownerOf(_zombieId) {
+    // 我方僵尸
+    Zombie storage myZombie = zombies[_zombieId];
+    // 攻击目标僵尸
+    Zombie storage enemyZombie = zombies[_targetId];
+    // 随机数确定战斗结果
+    uint rand = randMod(100);
 }
 ```
 
