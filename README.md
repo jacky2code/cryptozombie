@@ -2827,3 +2827,40 @@ function _createZombie(string memory _name, uint _dna) internal {
 }
 ```
 
+
+
+#### 第10章 僵尸胜利了 😄
+
+有了 `winCount` 和 `lossCount`，我们可以根据僵尸哪个僵尸赢了战斗来更新它们了。
+
+在第六章我们计算出来一个0到100的随机数。现在让我们用那个数来决定那谁赢了战斗，并以此更新我们的状态。
+
+##### 实战演习
+
+1. 创建一个 `if` 语句来检查 `rand` 是不是 ***小于或者等于\*** `attackVictoryProbability`。
+
+2. 如果以上条件为 `true`， 我们的僵尸就赢了！所以：
+
+   a. 增加 `myZombie` 的 `winCount`。
+
+   b. 增加 `myZombie` 的 `level`。 (升级了啦!!!!!!!)
+
+   c. 增加 `enemyZombie` 的 `lossCount`. (输家!!!!!! 😫 😫 😫)
+
+   d. 运行 `feedAndMultiply` 函数。 在 `zombiefeeding.sol` 里查看调用它的语句。 对于第三个参数 (`_species`)，传入字符串 "zombie". （现在它实际上什么都不做，不过在稍后， 如果我们愿意，可以添加额外的方法，用来制造僵尸变的僵尸）。
+
+``` solidity
+function attack(uint _zombieId, uint _targetId) external ownerOf(_zombieId) {
+  Zombie storage myZombie = zombies[_zombieId];
+  Zombie storage enemyZombie = zombies[_targetId];
+  uint rand = randMod(100);
+  // 在这里开始
+  if(rand <= attackVictoryProbability) {
+    myZombie.winCount++;
+    myZombie.level++;
+    enemyZombie.lossCount++;
+    feedAndMultiply(_zombieId, enemyZombie.dna, "zombie");
+  }
+}
+```
+
