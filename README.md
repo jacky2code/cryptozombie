@@ -2864,3 +2864,58 @@ function attack(uint _zombieId, uint _targetId) external ownerOf(_zombieId) {
 }
 ```
 
+
+
+#### 第11章 僵尸失败 😞
+
+我们已经编写了你的僵尸赢了之后会发生什么， 该看看 **输了** 的时候要怎么做了。
+
+在我们的游戏中，僵尸输了后并不会降级 —— 只是简单地给 `lossCount` 加一，并触发冷却，等待一天后才能再次参战。
+
+要实现这个逻辑，我们需要一个 `else` 语句。
+
+`else` 语句和 JavaScript 以及很多其他语言的 else 语句一样。
+
+```
+if (zombieCoins[msg.sender] > 100000000) {
+  // 你好有钱!!!
+} else {
+  // 我们需要更多的僵尸币...
+}
+```
+
+##### 实战演习
+
+1. 添加一个 `else` 语句。 若我们的僵尸输了：
+
+   a. 增加 `myZombie` 的 `lossCount`。
+
+   b. 增加 `enemyZombie` 的 `winCount`。
+
+2. 在 `else` 最后， 对 `myZombie` 运行 `_triggerCooldown` 方法。这让每个僵尸每天只能参战一次。
+
+``` solidity
+function attack(uint256 _zombieId, uint256 _targetId)
+    external
+    ownerOf(_zombieId)
+{
+    // 我方僵尸
+    Zombie storage myZombie = zombies[_zombieId];
+    // 攻击目标僵尸
+    Zombie storage enemyZombie = zombies[_targetId];
+    // 随机数确定战斗结果
+    uint256 rand = randMod(100);
+
+    if (rand <= attackVictoryProbability) {
+        myZombie.winCount++;
+        myZombie.level++;
+        enemyZombie.lossCount++;
+        feedAndMultiply(_zombieId, enemyZombie.dna, "zombie");
+    } else {
+        myZombie.lossCount++;
+        enemyZombie.winCount++;
+        _triggerCooldown(myZombie);
+    }
+}
+```
+
