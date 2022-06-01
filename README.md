@@ -2781,3 +2781,49 @@ function attack(uint _zombieId, uint _targetId) external ownerOf(_zombieId) {
 }
 ```
 
+
+
+#### 第9章 僵尸的输赢
+
+对我们的僵尸游戏来说，我们将要追踪我们的僵尸输赢了多少场。有了这个我们可以在游戏里维护一个 "僵尸排行榜"。
+
+有多种方法在我们的DApp里面保存一个数值 — 作为一个单独的映射，作为一个“排行榜”结构体，或者保存在 `Zombie` 结构体内。
+
+每个方法都有其优缺点，取决于我们打算如何和这些数据打交道。在这个教程中，简单起见我们将这个状态保存在 `Zombie` 结构体中，将其命名为 `winCount` 和 `lossCount`。
+
+我们跳回 `zombiefactory.sol`, 将这些属性添加进 `Zombie` 结构体.
+
+##### 实战演习
+
+1. 修改 `Zombie` 结构体，添加两个属性:
+
+   a. `winCount`, 一个 `uint16`
+
+   b. `lossCount`, 也是一个 `uint16`
+
+   > 注意： 记住, 因为我们能在结构体中包装`uint`, 我们打算用适合我们的最小的 `uint`。 一个 `uint8` 太小了， 因为 2^8 = 256 —— 如果我们的僵尸每天都作战，不到一年就溢出了。但是 2^16 = 65536 （`uint16`）—— 除非一个僵尸连续179年每天作战，否则我们就是安全的。
+
+2. 现在我们的 `Zombie` 结构体有了新的属性， 我们需要修改 `_createZombie()` 中的函数定义。
+
+   修改僵尸生成定义，让每个新僵尸都有 `0` 赢和 `0` 输。
+
+``` solidity
+struct Zombie {
+    string name;
+    uint dna;
+    uint32 level;
+    // 冷却定时器，限制僵尸猎食的频率
+    uint32 readyTime;
+    uint16 winCount;
+    uint16 lossCount;
+}
+
+function _createZombie(string memory _name, uint _dna) internal {
+    zombies.push(Zombie(_name, _dna, 1, uint32(block.timestamp + cooldownTime), 0, 0));
+    uint id = zombies.length -1;
+    zombieToOwner[id] = msg.sender;
+    ownerZombieCount[msg.sender]++;
+    emit NewZombie(id, _name, _dna);
+}
+```
+
