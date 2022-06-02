@@ -3,7 +3,7 @@ pragma solidity >=0.4.19;
 
 import "./zombiehelper.sol";
 
-contract ZombieBattle is ZombieHelper {
+contract ZombieAttack is ZombieHelper {
     uint256 randNonce = 0;
     uint256 attackVictoryProbability = 70;
 
